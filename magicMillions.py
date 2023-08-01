@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 # Your Mandrill API key
 MANDRILL_API_KEY = 'hnYCG2OcRIiKrcdQBHRohA'
@@ -16,7 +17,7 @@ USER_ID = '3727'
 USER_PASSWORD = 'HFCDAGZC'
 
 # Please set total lot number befor using this application
-TOTAL_LOT_NUMBER = 51
+TOTAL_LOT_NUMBER = 1000 
 
 # read local file to attach emails
 def read_file_content(file_path):
@@ -25,6 +26,9 @@ def read_file_content(file_path):
 
 # send email function
 def send_email_with_attachment(subject, message, from_email, to_email, attachment_filename, attachment_content):
+    # print("send_email_with_attachment is called")
+    # return
+
     try:
         mandrill_client = mandrill.Mandrill(MANDRILL_API_KEY)
 
@@ -114,51 +118,57 @@ try:
         ]
         csvwriter.writerow(header)
 
+        
+        # for index in range(51, TOTAL_LOT_NUMBER + 3):
         for index in range(1, TOTAL_LOT_NUMBER + 1):
         # for index in range(1, 3): # for test
             # print(i)
-            find_lot_input = driver.find_element(By.NAME, "find_lot")
-            find_lot_input.send_keys(str(index))
-            if index == 1:
-                go_button = driver.find_element(By.XPATH, "//html/body/div[1]/section[2]/div[1]/div/div/div[2]/form/div/div[2]/button")
-            else:
-                go_button = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[1]/div/div/div[1]/div/div[4]/form/div/div[2]/button")
+            try:
+                find_lot_input = driver.find_element(By.NAME, "find_lot")
+                find_lot_input.send_keys(str(index))
+                if index == 1:
+                    go_button = driver.find_element(By.XPATH, "//html/body/div[1]/section[2]/div[1]/div/div/div[2]/form/div/div[2]/button")
+                else:
+                    go_button = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[1]/div/div/div[1]/div/div[4]/form/div/div[2]/button")
 
-            go_button.click()
-            horse_name = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[2]/div/div[1]/div/h1")
-            horseDob = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[1]/div/div[2]")
-            horseSire = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[2]/div/div[2]")
-            horseDam = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[3]/div/div[2]")
-            horseCob = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[5]/div/div[2]")
-            horseSex = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[7]/div/div[2]")
-            horseCategory = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[8]/div/div[2]")
-            vandorName = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[2]")
-            vandorPhone = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[4]/a")
-            vandorMobile = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[5]/a")
-            vandorAddress = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[6]")
-            vandorEmail = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[7]/a")
+                go_button.click()
+                horse_name = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[2]/div/div[1]/div/h1")
+                horseDob = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[1]/div/div[2]")
+                horseSire = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[2]/div/div[2]")
+                horseDam = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[3]/div/div[2]")
+                horseCob = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[5]/div/div[2]")
+                horseSex = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[7]/div/div[2]")
+                horseCategory = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[1]/div/div/div/div[8]/div/div[2]")
+                vandorName = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[2]")
+                vandorPhone = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[4]/a")
+                vandorMobile = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[5]/a")
+                vandorAddress = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[6]")
+                vandorEmail = driver.find_element(By.XPATH, "/html/body/div[1]/section[2]/div[2]/div[1]/div[1]/div[6]/div/div[7]/a")
 
-            print(horse_name.text, horseDob.text, horseSire.text, horseDam.text, horseCob.text, horseSex.text, horseCategory.text, vandorName.text, vandorPhone.text, vandorMobile.text, vandorAddress.text, vandorEmail.text)
-            csvwriter.writerow([horse_name.text, horseDob.text, horseSire.text, horseDam.text, horseCob.text, horseSex.text, horseCategory.text, vandorName.text, vandorPhone.text, vandorMobile.text, vandorAddress.text, vandorEmail.text])
-            time.sleep(1) #sleep for 1 sec
+                print(horse_name.text, horseDob.text, horseSire.text, horseDam.text, horseCob.text, horseSex.text, horseCategory.text, vandorName.text, vandorPhone.text, vandorMobile.text, vandorAddress.text, vandorEmail.text)
+                csvwriter.writerow([horse_name.text, horseDob.text, horseSire.text, horseDam.text, horseCob.text, horseSex.text, horseCategory.text, vandorName.text, vandorPhone.text, vandorMobile.text, vandorAddress.text, vandorEmail.text])
+                time.sleep(1) #sleep for 1 sec
 
-    time.sleep(5) #sleep for 1 sec
+            except NoSuchElementException:
+                print("exception handled")
+                break
 
-    # Usage example
-    if __name__ == "__main__":
-        subject = "Crawling MagicMillions catalogues"
-        message = "<p>Please, refer attached file.</p>"
-        from_email = "system@bloodstockauction.com"
-        to_email = "it@bloodstockauction.com"
-
-        # Example attachment file path
-        file_path = './result-'+formatted_date+'.csv'
-        attachment_filename = 'result-'+formatted_date+'.csv'
-        attachment_content = read_file_content(file_path)
-
-        send_email_with_attachment(subject, message, from_email, to_email, attachment_filename, attachment_content)
-
+    time.sleep(1) #sleep for 1 sec
 except Exception as e:
     print(f"Error : {e}")
+
+# Usage example
+if __name__ == "__main__":
+    subject = "Crawling MagicMillions catalogues"
+    message = "<p>Please, refer attached file.</p>"
+    from_email = "system@bloodstockauction.com"
+    to_email = "it@bloodstockauction.com"
+
+    # Example attachment file path
+    file_path = './result-'+formatted_date+'.csv'
+    attachment_filename = 'result-'+formatted_date+'.csv'
+    attachment_content = read_file_content(file_path)
+
+    send_email_with_attachment(subject, message, from_email, to_email, attachment_filename, attachment_content)
 
 driver.quit()
