@@ -16,8 +16,39 @@ USER_ID = '3727'
 USER_PASSWORD = 'HFCDAGZC'
 
 # Please set total lot number befor using this application
-TOTAL_LOT_NUMBER = 45
+TOTAL_LOT_NUMBER = 51
 
+# read local file to attach emails
+def read_file_content(file_path):
+    with open(file_path, 'rb') as file:
+        return file.read()
+
+# send email function
+def send_email_with_attachment(subject, message, from_email, to_email, attachment_filename, attachment_content):
+    try:
+        mandrill_client = mandrill.Mandrill(MANDRILL_API_KEY)
+
+        attachment = {
+            'type': 'text/csv',  # Adjust the MIME type according to the file being attached
+            'name': attachment_filename,
+            'content': base64.b64encode(attachment_content).decode()
+        }
+
+        message = {
+            'from_email': from_email,
+            'to': [{'email': to_email, 'type': 'to'}],
+            'subject': subject,
+            'html': message,
+            'attachments': [attachment]
+        }
+
+        result = mandrill_client.messages.send(message=message)
+        print("Email with attachment sent successfully!")
+        print(result)
+
+    except mandrill.Error as e:
+        print(f"A Mandrill error occurred: {e}")
+        
 # Get the current date
 current_date = date.today()
 
@@ -70,12 +101,12 @@ try:
         csvwriter = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         header = [
         'horseName',
-        'horseCategory',
         'horseDob',
         'horseSire',
         'horseDam',
         'horseCob',
         'horseSex',
+        'horseCategory',
         'vandorName',
         'vandorPhone',
         'vandorMobile',
@@ -128,37 +159,6 @@ try:
         send_email_with_attachment(subject, message, from_email, to_email, attachment_filename, attachment_content)
 
 except Exception as e:
-    print("Catalogue is not live now")
+    print(f"Error : {e}")
 
 driver.quit()
-
-# read local file to attach emails
-def read_file_content(file_path):
-    with open(file_path, 'rb') as file:
-        return file.read()
-
-# send email function
-def send_email_with_attachment(subject, message, from_email, to_email, attachment_filename, attachment_content):
-    try:
-        mandrill_client = mandrill.Mandrill(MANDRILL_API_KEY)
-
-        attachment = {
-            'type': 'text/csv',  # Adjust the MIME type according to the file being attached
-            'name': attachment_filename,
-            'content': base64.b64encode(attachment_content).decode()
-        }
-
-        message = {
-            'from_email': from_email,
-            'to': [{'email': to_email, 'type': 'to'}],
-            'subject': subject,
-            'html': message,
-            'attachments': [attachment]
-        }
-
-        result = mandrill_client.messages.send(message=message)
-        print("Email with attachment sent successfully!")
-        print(result)
-
-    except mandrill.Error as e:
-        print(f"A Mandrill error occurred: {e}")
